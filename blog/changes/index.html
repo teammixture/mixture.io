@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog post: Changes coming // Mixture - The perfect front-end development tool for Mac &amp; Windows.</title>
+  <link rel="shortcut icon" href="/assets/img/favicon.ico" />
+  <link href="/assets/css/screen.min.css" rel="stylesheet" type="text/css" media="all"/>
+  <script src="/assets/js/modernizr.min.js"></script>
+  <!-- [if lt IE 9]>
+  <script src="/assets/js/respond.min.js"></script>
+  <![endif] -->
+  <script src="//use.typekit.net/ems7wlq.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+</head>
+<body class="blog-wrapper">
+  <div class="wrapper">
+    <header>
+      <div class="content">
+        <a href="/" class="logo">Mixture</a>
+        <nav>
+          <a href="http://accounts.mixture.io">Account</a>
+          <a href="http://docs.mixture.io">Docs</a>
+          
+          <a href="/blog" class="selected">Blog</a>
+          <a href="/#download" class="button button--outline button--download-link mobile-hidden">Download</a>
+        </nav>
+      </div>
+    </header>
+    <div class="articles">
+      <article>
+        <h1>Changes coming</h1>
+        
+        
+<p>Over the next two weeks we are introducing some small but important changes to our hosting and support.</p>
+
+<h2>Domains</h2>
+
+<p>Currently we allow naked (apex / root / bare) domains to be used with Mixture hosted projects, this comes with some additional complications and overhead with our setup and hosting structure and has led to a couple of small instances of downtime.</p>
+
+<p>We’ve decided it’s better for all of our user’s if we remove this feature, this will improve the stability of our hosting for everyone.</p>
+
+<p>Don’t worry, you will still be able to use your domain with Mixture hosted projects, but instead of pointing at the ip address, you will point at the project name via a CNAME.</p>
+
+<p>A CNAME record does not require hard-coded IP addresses. However, CNAME records are not available at the zone apex and can’t be used to configure root domains.</p>
+
+<p>If you are using a domain it will be necessary to make this change as soon as possible.</p>
+
+<p>You simply need to access the DNS settings for your domain and point the domain at your Mixture project as per the example below…</p>
+
+<pre><code class="language-markup">www.your-domain.com    CNAME    project-name.username.mixture.io
+</code></pre>
+
+<h2>Support</h2>
+
+<p>We receive a lot of support requests, the majority of this support is not related directly to Mixture but more the technologies around it or a user’s specific setup, we’re always happy to help and we do our best but it’s not possible for us to answer every single question.</p>
+
+<p>Due to this we’ve decided to take a more community driven approach and move support over to a Google group and actively encourage users of Mixture and the technologies to get involved.</p>
+
+<p>For urgent support requests we will be adding a new support section to your online account at https://accounts.mixture.io.</p>
+
+<p>We’re planning to introduce these changes gradually over the next two weeks and will be emailing affected users where necessary.</p>
+
+<p>If you have any questions please email us at team@mixture.io.</p>
+
+<p>Neil</p>
+
+        <span class="posted">Tue Oct 21 2014</span>
+        
+      </article>
+    </div>
+    <footer>
+      <div class="content">
+        <p>Mixture Limited. Holly Corner, Brimfield, Ludlow SY8 4NQ. United Kingdom. No. 8232592</p>
+        <a href="http://twitter.com/TeamMixture" class="twitter">Twitter</a>
+      </div>
+    </footer>
+  </div>
+</body>
+<script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+<script type="text/javascript">
+  if (typeof jQuery == 'undefined') {
+    document.write(unescape("%3Cscript src='/assets/js/jquery-2.0.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+  }
+</script>
+<script src="/assets/js/script.min.js"></script>
+<script src="/assets/js/prism.min.js" data-default-language="markup"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-35293218-1']);
+  _gaq.push(['_setDomainName', 'mixture.io']);
+  _gaq.push(['_trackPageview']);
+
+  (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</html>

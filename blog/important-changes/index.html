@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog post: Important changes // Mixture - The perfect front-end development tool for Mac &amp; Windows.</title>
+  <link rel="shortcut icon" href="/assets/img/favicon.ico" />
+  <link href="/assets/css/screen.min.css" rel="stylesheet" type="text/css" media="all"/>
+  <script src="/assets/js/modernizr.min.js"></script>
+  <!-- [if lt IE 9]>
+  <script src="/assets/js/respond.min.js"></script>
+  <![endif] -->
+  <script src="//use.typekit.net/ems7wlq.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+</head>
+<body class="blog-wrapper">
+  <div class="wrapper">
+    <header>
+      <div class="content">
+        <a href="/" class="logo">Mixture</a>
+        <nav>
+          <a href="http://accounts.mixture.io">Account</a>
+          <a href="http://docs.mixture.io">Docs</a>
+          
+          <a href="/blog" class="selected">Blog</a>
+          <a href="/#download" class="button button--outline button--download-link mobile-hidden">Download</a>
+        </nav>
+      </div>
+    </header>
+    <div class="articles">
+      <article>
+        <h1>Important changes</h1>
+        
+        
+<p>We’re about to push an important update to Mixture (Windows v242 and Mac v247).</p>
+
+<p>It’s important as we’ve made some adjustments to the settings in key areas and they may affect older projects:</p>
+
+<ul>
+  <li>Convert to HTML</li>
+  <li>GitHub Pages</li>
+  <li>FTP</li>
+  <li>Amazon S3 (new settings)</li>
+</ul>
+
+<p>Some of these are fairly big changes, so if you use any of these features on old Mixture projects please make sure you read the details below and check out the relevant sections within the <a href="http://docs.mixture.io">docs</a>.</p>
+
+<h3>Convert to HTML</h3>
+
+<p>We’ve adjusted the settings and moved them into their own setting within the mixture settings file.</p>
+
+<p>For more information please check out the <a href="http://docs.mixture.io/convert-html">updated docs for convert to HTML</a>.</p>
+
+<h3>GitHub Pages</h3>
+
+<p>We’ve removed the GitHub pages settings completely from the mixture settings file and they have been pushed into the “.githubsettings” file.</p>
+
+<p>This is beneficial for projects with multiple users as it allows each user to have and maintain their own settings without affecting the core project settings - you can also ignore this file from any version control you may use.</p>
+
+<p>For more information please check out the <a href="http://docs.mixture.io/github-pages">updated docs for GitHub pages</a>.</p>
+
+<h3>FTP</h3>
+
+<p>We’ve removed the FTP settings completely from the mixture settings file and they have been pushed into a new file “.ftpsettings”.</p>
+
+<p>This is beneficial for projects with multiple users as it allows each user to have and maintain their own settings without affecting the core project settings - you can also ignore this file from any version control you may use.</p>
+
+<p>For more information please check out the <a href="http://docs.mixture.io/ftp">updated docs for FTP</a>.</p>
+
+<h3>Amazon S3 (new!)</h3>
+
+<p>We’ve added support for Amazon S3 static hosting, simply create your bucket within your own Amazon account add your credentials and bucket name to “.s3settings” file within the root of your Mixture project and you can begin publishing to Amazon S3 from within Mixture tools.</p>
+
+<p>For more information please check out the <a href="http://docs.mixture.io/amazon-s3">Mixture + Amazon S3 docs</a>.</p>
+
+<hr />
+
+<p>These releases have various stability improvements and bug fixes, including an update to libsass taking it to version 2.</p>
+
+<p>Please checkout the changelogs for more information on each platform.</p>
+
+<p><a href="http://docs.mixture.io/windows/changelog">Windows Changelog</a>.</p>
+
+<p><a href="http://docs.mixture.io/mac/changelog">Mac Changelog</a>.</p>
+
+        <span class="posted">Fri Jun 06 2014</span>
+        
+      </article>
+    </div>
+    <footer>
+      <div class="content">
+        <p>Mixture Limited. Holly Corner, Brimfield, Ludlow SY8 4NQ. United Kingdom. No. 8232592</p>
+        <a href="http://twitter.com/TeamMixture" class="twitter">Twitter</a>
+      </div>
+    </footer>
+  </div>
+</body>
+<script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+<script type="text/javascript">
+  if (typeof jQuery == 'undefined') {
+    document.write(unescape("%3Cscript src='/assets/js/jquery-2.0.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+  }
+</script>
+<script src="/assets/js/script.min.js"></script>
+<script src="/assets/js/prism.min.js" data-default-language="markup"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-35293218-1']);
+  _gaq.push(['_setDomainName', 'mixture.io']);
+  _gaq.push(['_trackPageview']);
+
+  (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</html>

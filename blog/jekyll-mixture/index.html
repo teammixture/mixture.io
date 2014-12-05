@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog post: Moving from Jekyll to Mixture // Mixture - The perfect front-end development tool for Mac &amp; Windows.</title>
+  <link rel="shortcut icon" href="/assets/img/favicon.ico" />
+  <link href="/assets/css/screen.min.css" rel="stylesheet" type="text/css" media="all"/>
+  <script src="/assets/js/modernizr.min.js"></script>
+  <!-- [if lt IE 9]>
+  <script src="/assets/js/respond.min.js"></script>
+  <![endif] -->
+  <script src="//use.typekit.net/ems7wlq.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+</head>
+<body class="blog-wrapper">
+  <div class="wrapper">
+    <header>
+      <div class="content">
+        <a href="/" class="logo">Mixture</a>
+        <nav>
+          <a href="http://accounts.mixture.io">Account</a>
+          <a href="http://docs.mixture.io">Docs</a>
+          
+          <a href="/blog" class="selected">Blog</a>
+          <a href="/#download" class="button button--outline button--download-link mobile-hidden">Download</a>
+        </nav>
+      </div>
+    </header>
+    <div class="articles">
+      <article>
+        <h1>Moving from Jekyll to Mixture</h1>
+        
+        <h2 class="author">Guest post: <a href="http://hugogiraudel.com">Hugo Giraudel</a></h2>
+        
+        
+<p>Hey guys! A couple of weeks ago, I decided to move my (perfectly) working site away from <a href="http://jekyllrb.com/">Jekyll</a> because I encountered some severe issues when trying to make things work on a Windows environment. Eventually I got bored of struggling with installation and command lines issues so I started looking for another static site generator.</p>
+
+<p>My needs were simple; I wanted to:</p>
+
+<ul>
+  <li>have an automated blogging system,</li>
+  <li>be able to have some static pages,</li>
+  <li>avoid any server-side language and database.</li>
+</ul>
+
+<p>This soon came as a no-brainer: <a href="http://mixture.io/">Mixture</a> was the right choice. So I signed up to Mixture’s trial version and started playing around. If some of you want to ditch Jekyll once and for all, then you might want to consider Mixture. Here’s the story.</p>
+
+<h2>Project structure</h2>
+
+<p>If you are willing to create a blog using Mixture, I suggest you start with the bootstrap (nothing to do with Twitter Bootstrap in this case) <em>Simple Blog Project</em> which is almost ready to go. Then you will only have to tweak a couple of things to get started.</p>
+
+<p>A Mixture project is usually structured like this:</p>
+
+<ul>
+  <li><code>assets/</code>: a folder containing all assets (JS, CSS, fonts, SVG…)</li>
+  <li><code>images/</code>: a folder containing all images</li>
+  <li><code>collections/</code>: a folder containing collections (in our case, article files)</li>
+  <li><code>models/</code>: a folder containing some data about your site as JSON files</li>
+  <li><code>templates/</code>: a folder container all your template and markup files</li>
+  <li><code>mixture.json</code>: the configuration file for your project</li>
+</ul>
+
+<p>… and a couple of extra files at root level: <code>.gitignore</code>, <code>favicon.ico</code>, etc. </p>
+
+<h2>Basic templating</h2>
+
+<p>Both Jekyll and Mixture use variants of <a href="https://github.com/Shopify/liquid">Liquid</a> as a templating engine, so you won’t feel lost. That being said, I noticed Jekyll took a lot of things on its side, making it darn easy for you to use Liquid. Mixture on the other hand tries to give you as much autonomy as you need, so you will probably end up using Liquid a bit more than expected.</p>
+
+<p>Templating in Mixture is surprisingly easy to understand thanks to the well designed folder structure. All markup files lie in a <code>templates/</code> directory, at root of the Mixture project. Inside this folder, there are:</p>
+
+<ul>
+  <li><code>includes/</code> folder containing all template files meant to be re-used with the <a href="http://docs.mixture.io/templates#layouts-includes">liquid include tag</a>.</li>
+  <li><code>layouts/</code> folder containg all layout templates</li>
+  <li>static pages as <code>.liquid</code> files (e.g. <code>index.liquid</code>, <code>rss.liquid</code>, <code>404.liquid</code>…) the name of these pages will become the URL, but there are also more advanced routing options.</li>
+</ul>
+
+<p>So this keeps things rather simple: layout files go in <code>templates/layouts/</code>, reusable template files go in <code>templates/includes/</code> and everything else just stand at root level in the <code>templates/</code> directory.</p>
+
+<p>In my case, here is my <code>templates/</code> folder:</p>
+
+<pre><code class="language-javascript">templates/
+|
+|- includes/
+|   |
+|   |- articles/
+|   |   |
+|   |   |- article.liquid
+|   |   |- no-articles.liquid
+|   |   |- paged-too-far.liquid
+|   |   |- paging.liquid
+|   |   |- rss-item.liquid
+|   |
+|   |- footer.liquid
+|   |- header.liquid
+|   |- scripts.liquid
+|   |- sidebar.liquid
+|
+|- layouts/
+|   |
+|   |- default.liquid
+|
+|- 404.liquid
+|- index.liquid
+|- post.liquid
+|- rss.liquid
+</code></pre>
+
+<p>Let’s start with the easy part: at root level, there are a couple of files:</p>
+
+<ul>
+  <li><code>404.liquid</code>, showing up whenever a route can’t match any template</li>
+  <li><code>index.liquid</code>, so basically the home page of the site</li>
+  <li><code>post.liquid</code>, the template for an article page</li>
+  <li><code>rss.liquid</code>, the RSS file</li>
+</ul>
+
+<p>So far so good. My site is rather small so I have only one layout in the <code>layouts/</code> folder, called <code>default.liquid</code>; perhaps one day I’ll need another one.</p>
+
+<p>Then, in the <code>includes/</code> folder there are the partial files that are included in the default layout. We can see the major parts of a page: header, footer, sidebar, and <code>scripts.liquid</code> that deals with JavaScript.</p>
+
+<p>Also in the <code>includes/</code> folder, but nested in a <code>articles/</code> subfolder, there are all the tiny blocks related to articles: pagination as well as edge cases from pagination (too far, no item…), list item from the home page, RSS item… This idea comes from the default project from Mixture, and I thought it was cool so I kept it as is.</p>
+
+<h2>Setting up a layout</h2>
+
+<p>Now we have all our files ready, we need to build a layout. In my case there is a single layout called <code>default</code>. If your project would make good use of several layouts, make several files accordingly.</p>
+
+<pre><code class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+{% block vars %}{% endblock %}
+... all the meta tags, stylesheets and stuff ...
+&lt;title&gt;{% block title %} {{ post.title }} {% endblock %}&lt;/title&gt;
+&lt;/head&gt;   
+&lt;body&gt;
+&lt;div class="wrapper"&gt;
+  {% include "header" %}
+  
+  &lt;article class="main" role="main"&gt; 
+  {% block content %}{% endblock %}
+  &lt;/article&gt;
+  
+  {% include "sidebar" %}
+  {% include "footer" %}
+&lt;/div&gt;
+
+{% include "scripts" %}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>This is what the layout file looks like. In a matter of simplicity, I intentionally stripped all the head content. However let’s have a few notes before moving on:</p>
+
+<ul>
+  <li>we define an empty <code>vars</code> block at the top of the <code>&lt;head /&gt;</code></li>
+  <li>we define a <code>title</code> block to fill the <code>&lt;title /&gt;</code> tag, default value being <code>post.title</code> if defined</li>
+  <li>we define a <code>content</code> block in the <code>&lt;article /&gt;</code> tag to fill the layout with actual content</li>
+</ul>
+
+<p>If you don’t understand yet why we’re doing all this, don’t worry. We will come back to it soon.</p>
+
+<h2>Writing an article</h2>
+
+<p>What would be a blog without articles? If you are using the <em>Simple Blog</em> project from Mixture, then a couple of articles should already exist in <code>collections/article/</code>. Because articles are rather <em>data</em> than <em>templates</em>, they do not lie in the <code>templates/</code> folder. Instead, they are gathered in the <code>collections/</code> directory. The name of the subfolder (e.g. <code>articles/</code>) stands for the name of the collection.</p>
+
+<p>Jekyll has an interesting way of handling articles date: it requires a very specific naming pattern. For an article to be considered valid, it has to be in the <code>_posts/</code> folder and named like this: <code>YYYY-MM-DD-slug</code>. This will allow Jekyll to process it and serve it at <code>http://domain.tld/YYYY/MM/DD/slug</code>. For instance, the input is <code>_posts/2014-05-26-how-i-came-to-write-for-the-web.md</code> and Jekyll converts it to <code>/2014/05/26/how-i-came-to-write-for-the-web</code>.</p>
+
+<p>I like having both the date and the slug in the URL, so even though I don’t have to follow this strict pattern anymore, I keep doing so. So whenever I want to write a new article, I create a Markdown file following this convention, for instance:</p>
+
+<pre><code class="language-markup">collections/article/2014-05-26-how-i-came-to-write-for-the-web.md
+</code></pre>
+
+<p>Then as with Jekyll, the article is composed of 2 distincts part: </p>
+
+<ul>
+  <li>the YAML front matter (a block of variables)</li>
+  <li>the content</li>
+</ul>
+
+<p>The YAML front matter is really important: it contains all the meta data from the post (title, date, layout, options…). Here is an example:</p>
+
+<pre><code class="language-javascript">---
+comments: true
+date: 2014-05-26
+layout: post
+published: true
+title: "How I came to write for the web"
+---
+</code></pre>
+
+<p>Jekyll doesn’t need the date since it is part of the file name but Mixture does so I added it to all my posts (manually…). Also Jekyll treats any post as published except told otherwise. On the other hand, Mixture treats any post as a draft until you have set <code>published: true</code>.</p>
+
+<p>While we mostly deal with default meta from the YAML head here, it is quite common to add custom variables as well. I do use a couple of custom meta myself, but I only add them when they are relevant:</p>
+
+<ul>
+  <li><code>codepen</code> (boolean): asynchronously loads CodePen’s script for embedded pens</li>
+  <li><code>sassmeister</code> (boolean): asynchronously loads SassMeister’s script for embedded gists</li>
+  <li><code>comments</code> (boolean): asynchronously loads Disqus for comments</li>
+  <li><code>summary</code> (boolean): displays a table of contents on top of the article</li>
+  <li><code>guest</code> (string): name of the guest author (displayed under article title)</li>
+</ul>
+
+<p>… among other things.</p>
+
+<p>And then, right below the last <code>--</code>, there is the article content. I like to write my articles in Markdown, sometimes with a little bit of HTML when Markdown is not enough.</p>
+
+<h2>Building the home page</h2>
+
+<p>Now that we have a couple of articles, we need to build the home page. In my case, the index of my site displays links to latest articles, with a pagination to move back in time to older ones. </p>
+
+<p>We are dealing with the <code>templates/index.liquid</code> file here. First thing we do is telling Mixture to extend a layout:</p>
+
+<pre><code class="language-markup">{% layout "default" %}
+</code></pre>
+
+<p><em>Note: this value should match the name of a file from <code>templates/layouts</code>. If it doesn’t, Mixture will throw an error.</em></p>
+
+<p>Now that we have a layout, we have access to the <code>content</code> block, allowing us to fill the page with whatever we want. In this block, we will use the <a href="http://docs.mixture.io/collections">liquid collection tag</a> which allows us to call and manipulate a collection. In our case, the collection is made of all our article files we have in <code>collections/article/</code>.</p>
+
+<p>The next code block is quite heavy. Hopefully, you won’t have to code this since it is included in Mixture <em>Simple Blog</em> project. I just tweaked it a little so it works as I wanted. It mostly deals with pagination (especially handling cases where the requested page would not exist or there is no article to display). </p>
+
+<pre><code class="language-markup">{% block content %} 
+  {% collection "article" by 7 order desc %}
+    {% if collection.current_page &gt; collection.pages and collection.size &gt; 0 %}
+      {% include "articles/paged-too-far" %}
+    {% elseif collection.size == 0 %}
+      {% include "articles/no-articles" %}
+    {% else %}
+    &lt;ul class="list-articles"&gt;
+      {% assign currentpage = collection.current_page %}
+      {% include "articles/article" with collection.items %}
+    &lt;/ul&gt;
+    {% include "articles/paging" %}
+    {% endif %}
+  {% endcollection %}
+{% endblock %}
+</code></pre>
+
+<p>As you can see, it makes good use of all our Liquid files from <code>templates/includes/articles/</code>. </p>
+
+<p>Last but not least, we should fill the title of the document (<code>&lt;title /&gt;</code>) with the block we defined in the layout.</p>
+
+<pre><code class="language-markup">{% block title %}HugoGiraudel.com{% endblock %}
+</code></pre>
+
+<p>That’s all!</p>
+
+<h2>Keeping old URLs</h2>
+
+<p>As we have seen earlier, Jekyll serves articles as follow: </p>
+
+<pre><code class="language-javascript">http://domain.tld/YYYY/MM/DD/slug
+</code></pre>
+
+<p>Meanwhile, the <em>Simple Blog</em> project from Mixture serves article like this:</p>
+
+<pre><code class="language-javascript">http://domain.tld/article/slug
+</code></pre>
+
+<p>Obviously I had a problem here. Not only did I want to use my old pattern from Jekyll, but most importantly I wanted the old URLs to still work! One would say <em>Just do some URL rewriting with <code>.htaccess</code></em>, however since I am hosting my site on <a href="https://pages.github.com/">GitHub Pages</a>, there is no way I could do that. So this is where things got tricky…</p>
+
+<p>Basically what I had to do was telling Mixture to route any URL matching Jekyll’s pattern to a specific template file. Then, this file would get parameters (year, month, day and slug) from the URL and query the requested article. </p>
+
+<p>You might think it sounds complicated and you would be right. Let’s go!</p>
+
+<h3>Setting up the routing</h3>
+
+<p>First things first. In the configuration file (<code>mixture.json</code>), there is a key called <code>routes</code>. In the default project, this key looks like this:</p>
+
+<pre><code class="language-javascript">{
+  "routes": [
+    {
+      "route": "page-:page",
+      "template": "index",
+      "redirect": null
+    },
+    {
+      "route": "tag/:tag",
+      "template": "index",
+      "redirect": null
+    }
+  ]
+}
+</code></pre>
+
+<p>The first route tells Mixture to display the <code>templates/index.liquid</code> file whenever the URL matches <code>/page-*</code> (e.g. <code>http://domain.tld/page-2</code>). This is required to make the pagination work as expected. Else, you would have to have a template for page 1, a template for page 2, a template for page 3… The second route does the same thing with tags (categories).</p>
+
+<p>What we want is to display a specific template — let’s call it <code>post</code> — whenever the URL matches <code>YYYY/MM/DD/slug</code>. The closest thing we can do is adding a route like this:</p>
+
+<pre><code class="language-javascript">{
+  "route": ":year/:month/:day/:url",
+  "template": "post",
+  "redirect": null
+}
+</code></pre>
+
+<p>The tokens <code>:year</code>, <code>:month</code>, <code>:day</code> and <code>:url</code> are not official or anything. Those are basically names I gave them so I can track them in the <code>post.liquid</code> template using <code>mixture.route.{token}</code>.</p>
+
+<h2>Creating the post template</h2>
+
+<p>Speaking of, let’s create it. As always, first thing to do: defining the layout. And again since we only have one:</p>
+
+<pre><code class="language-markup">{% layout "default" %}
+</code></pre>
+
+<p>Now do you remember our <code>vars</code> block we set up at the top of <code>&lt;head /&gt;</code>? This is where it comes in handy. What we will do is query the file matching the variables we get from the URL (the one we just declared in our routing) and define a global variable in <code>vars</code> with its content. It sounds complicated but it might get better after you see the code: </p>
+
+<pre><code class="language-markup">{% block vars %}
+  {% collection "article" by 1 query "slug=/article/{{ mixture.route.year }}-{{ mixture.route.month }}-{{ mixture.route.day }}-{{ mixture.route.url }}" %}
+    {% assign post = collection.items.first %}
+  {% endcollection %}
+{% endblock %}
+</code></pre>
+
+<p>Literally, the query says <em>go fetch me the file in <code>articles/</code> folder called {year} set in URL, hyphen, {month} set in URL, hyphen, {day} set in URL, hyphen, {slug} set in URL</em>. Then, the <code>post</code> variable containing everything about the article is set in the <code>vars</code> block, accessible anywhere in the page. </p>
+
+<p>Last thing to do, fill the <code>content</code> block:</p>
+
+<pre><code class="language-markup">{% block content %}
+  {% if post.title %} 
+    &lt;h1&gt;{{ post.title }}&lt;/h1&gt; 
+  {% endif %}
+
+  {% if post.date %}
+    &lt;p class="date"&gt;{{ post.date | date: "%B %d, %Y" }}
+    {% if post.guest %} &amp;mdash; by {{ post.guest }}{% endif %}
+    &lt;/p&gt; 
+  {% endif %}
+  
+  {{ post.body }}
+
+  {% if post.comments %}
+    &lt;div id="disqus_thread"&gt;&lt;/div&gt; 
+  {% endif %}
+{% endblock %}
+</code></pre>
+
+<p>This is quite straight-forward: we use <code>post.{key}</code> to access data from the article.</p>
+
+<h2>Making links from index work</h2>
+
+<p>One thing we still have to do is make sure our links from the home page follow the same pattern. We want them to lead to <code>/YYYY/MM/DD/slug</code>, not <code>/article/slug</code>. </p>
+
+<p>If you have a look at how we built the index page you’ll notice we include <code>articles/article</code> in an unordered list, passing it the current item (<code>collection.items</code>). This small template is the one responsible for a <code>&lt;li /&gt;</code> item (with post title, date, link…) in the home page.</p>
+
+<p>Unfortunately at this point, we don’t have access to <code>mixture.routing.year</code>, <code>mixture.routing.month</code>, <code>mixture.routing.day</code> and <code>mixture.routing.slug</code> from the URL because we are on the home page (<code>http://domain.tld/</code>). Yet, we have to build a link pointing to <code>year/month/day/slug</code>. So how do we do? Well fasten your belts boys because this is kind of hacky.</p>
+
+<p>We will use the <a href="http://docs.mixture.io/templates#tags">liquid capture tag</a> which allows us to define a variable. Think of it as the <code>assign</code> tag but with multi-lines internal logic. </p>
+
+<p>Getting the year, the month or the day separately is easy since we have access to <code>article.date</code>. Then, getting the 3 values is as simple as:</p>
+
+<ul>
+  <li>year: <code>article.date | date: '%Y'</code></li>
+  <li>month: <code>article.date | date: '%m'</code></li>
+  <li>day: <code>article.date | date: '%d'</code></li>
+</ul>
+
+<p>What we really need now is the slug; the part coming after the day. </p>
+
+<p>One way I found to get it was to get rid of everything that went before: the folder (<code>article/</code>), the year, the hyphen, the month, the hyphen, the day and the last hyphen. </p>
+
+<p>What’s interesting is all this crap we want to ditch always have the same length: 9 characters for the folder name (<code>articles/</code>), 10 characters for the date (<code>YYYY-MM-DD</code>) and 1 extra character for the trailing hyphen (<code>-</code>) before the slug. Let a total of 20 characters. So in order to get the actual slug, we need to get read of the 20 first characters of the article file name (<code>article.slug</code>).</p>
+
+<p>Sadly, Liquid doesn’t provide a filter to remove the <code>n</code> first characters from the string. But! There is the <code>truncate</code> filter which accepts a value to <strong>keep</strong> the <code>n</code> first characters from the string. So if we apply <code>article.slug | truncate: 20</code>, we end up with everything we don’t want. And that’s cool. Because now we can apply the <code>remove</code> filter to <code>article.slug</code>, getting rid of those 20 characters.</p>
+
+<pre><code class="language-markup">{% capture _slug %}
+  {% assign crap = article.slug | truncate: 20 %}
+  {{ article.slug | remove: crap }}
+{% endcapture %}
+</code></pre>
+
+<p>See? First we store the 20 first characters in a variable. Then, we remove the content of this variable from <code>article.slug</code>, getting only what we want: the real slug. </p>
+
+<p><em>Note: <code>capture</code> tag is not spaceless, meaning you should inline everything if you don’t want your captured variable to have spaces and carriage returns.</em></p>
+
+<p>Creating the accurate link is now a piece of cake:</p>
+
+<pre><code class="language-markup">&lt;li role="article"&gt;
+  ...
+  &lt;a href="{{ article.date | date: '%Y' }}/{{ article.date | date: '%m' }}/{{ article.date | date:'%d' }}/{{ _slug }}"&gt;{{ article.title }}&lt;/a&gt;
+  ...
+&lt;/li&gt;
+</code></pre>
+
+<h2>Avoiding duplicated content</h2>
+
+<p>Hey, we’re getting somewhere ain’t we? We preserved old URLs from Jekyll. We also made some tweaks to Mixture to make it serve our content following our specific URL pattern rather than the default one. That being said, if we compile the project as is, all articles will be generated twice: once at the regular URL, once at our custom one. For instance:</p>
+
+<ul>
+  <li><code>http://hugogiraudel.com/2014/05/26/how-i-cam-to-write-for-the-web</code></li>
+  <li><code>http://hugogiraudel.com/article/2014-05-26-how-i-cam-to-write-for-the-web</code></li>
+</ul>
+
+<p>Uh-oh, that’s not good. Not only is this confusing, but it is also really bad for SEO. If Google notices we are serving the same content twice at different URLs, we might get downranked or even blacklisted for SEO cheating. This is definitely not what we want.</p>
+
+<p>Thankfully Mixture is really well designed and we only have to update our configuration file to avoid the disaster. Indeed, there is <code>"convertHtml -&gt; ignoreUrls"</code> key available, telling Mixture what files/folders shouldn’t be compiled.</p>
+
+<pre><code class="language-javascript">"ignoreUrls": ["/article/", "/post"]
+</code></pre>
+
+<p>Here we tell Mixture not to compile the <code>article/</code> folder, nor the <code>post.liquid</code> template.</p>
+
+<p>If we set <code>"convertHtml -&gt; relativePaths"</code> to true, Mixture will ensure and convert all paths, assets, links are relative and add extensions where necessary. In this case I needed my paths to remain as I have coded and so I set to false.</p>
+
+<pre><code class="language-javascript">"convertHtml": {
+  "relativePaths": false
+  "default": "index"
+}
+</code></pre>
+
+<p>You can see above we also set the <code>"convertHtml -&gt; default"</code> option in the config file.</p>
+
+<p>This tells Mixture not to create files as <code>slug.html</code> but <code>slug/index.html</code>, leaving the default redirect to the browser. Now, our articles are generated in <code>{year}/</code>, then <code>[month}/</code>, then <code>{day}/</code>, then <code>{slug}/</code>, as <code>index.html</code> files. For instance:</p>
+
+<pre><code class="language-javascript">2014/
+|
+|- 05/
+|   |
+|   |- 26/
+|   |   |
+|   |   |- how-i-came-to-write-for-the-web/
+|   |   |   |
+|   |   |   |- index.html
+</code></pre>
+
+<p>Pretty cool, right?</p>
+
+<h2>Final thoughts</h2>
+
+<p>Well, I think that should be enough to get you started if you ever decide to move away from Jekyll to embrace Mixture’s power. Some of the operations we did here might look complicated but that’s not Mixture’s fault; this is because I wanted to keep old URLs from Jekyll.</p>
+
+<p>In itself, Mixture is simple and comfy to use. If you haven’t tried it yet, you should.</p>
+
+        <span class="posted">Mon Jun 16 2014</span>
+        
+      </article>
+    </div>
+    <footer>
+      <div class="content">
+        <p>Mixture Limited. Holly Corner, Brimfield, Ludlow SY8 4NQ. United Kingdom. No. 8232592</p>
+        <a href="http://twitter.com/TeamMixture" class="twitter">Twitter</a>
+      </div>
+    </footer>
+  </div>
+</body>
+<script src="//code.jquery.com/jquery-2.0.2.min.js"></script>
+<script type="text/javascript">
+  if (typeof jQuery == 'undefined') {
+    document.write(unescape("%3Cscript src='/assets/js/jquery-2.0.2.min.js' type='text/javascript'%3E%3C/script%3E"));
+  }
+</script>
+<script src="/assets/js/script.min.js"></script>
+<script src="/assets/js/prism.min.js" data-default-language="markup"></script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-35293218-1']);
+  _gaq.push(['_setDomainName', 'mixture.io']);
+  _gaq.push(['_trackPageview']);
+
+  (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</html>
